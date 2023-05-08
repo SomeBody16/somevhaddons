@@ -20,7 +20,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.RegistryObject;
 import network.something.somevhaddons.block.jewel_station.gui.JewelStationMenu;
-import network.something.somevhaddons.block.jewel_station.util.JewelStackHandler;
+import network.something.somevhaddons.block.jewel_station.inventory.JewelStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -45,6 +45,7 @@ public class JewelStationBlockEntity extends BlockEntity implements IAnimatable,
     public final JewelStackHandler chestHandler = new JewelStackHandler() {
         @Override
         protected void onContentsChanged() {
+            super.onContentsChanged();
             setChanged();
         }
     };
@@ -53,6 +54,7 @@ public class JewelStationBlockEntity extends BlockEntity implements IAnimatable,
     public final JewelStackHandler calculatorHandler = new JewelStackHandler() {
         @Override
         protected void onContentsChanged() {
+            super.onContentsChanged();
             setChanged();
         }
     };
