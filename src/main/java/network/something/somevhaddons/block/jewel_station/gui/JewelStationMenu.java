@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.RegistryObject;
+import network.something.somevhaddons.SomeVHAddons;
 import network.something.somevhaddons.api.screen.BaseMenu;
 import network.something.somevhaddons.api.screen.widget.ScrollbarWidget;
 import network.something.somevhaddons.api.util.MenuUtil;
@@ -70,8 +71,10 @@ public class JewelStationMenu extends BaseMenu {
 
             for (var col = 0; col < visibleColumns; col++) {
                 var slot = new JewelSlot(jewelStation.chestHandler,
-                        (actualRow * visibleColumns) + col,
+                        col + (actualRow * visibleColumns),
                         8 + col * 18, 18 + row * 18);
+
+                SomeVHAddons.LOGGER.info(":1 [{}, {}]: {}", row, col, col + (row * visibleColumns));
                 addSlot(slot);
             }
         }
