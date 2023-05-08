@@ -1,14 +1,11 @@
 package network.something.somevhaddons.block.jewel_station.gui.slot;
 
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import network.something.somevhaddons.block.jewel_station.util.JewelStackHandler;
 
 public class JewelSlot extends SlotItemHandler {
 
-    private static Container emptyInventory = new SimpleContainer(0);
     private final JewelStackHandler itemHandler;
 
     public JewelSlot(JewelStackHandler itemHandler, int index, int pX, int pY) {

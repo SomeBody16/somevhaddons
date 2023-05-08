@@ -71,13 +71,7 @@ public class JewelStationMenu extends BaseMenu {
             for (var col = 0; col < visibleColumns; col++) {
                 var slot = new JewelSlot(jewelStation.chestHandler,
                         (actualRow * visibleColumns) + col,
-                        8 + col * 18, 18 + row * 18) {
-                    @Override
-                    public void setChanged() {
-                        super.setChanged();
-                        initSlots();
-                    }
-                };
+                        8 + col * 18, 18 + row * 18);
                 addSlot(slot);
             }
         }
