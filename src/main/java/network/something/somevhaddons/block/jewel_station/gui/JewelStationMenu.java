@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.RegistryObject;
-import network.something.somevhaddons.SomeVHAddons;
 import network.something.somevhaddons.api.screen.BaseMenu;
 import network.something.somevhaddons.api.screen.widget.ScrollbarWidget;
 import network.something.somevhaddons.api.util.MenuUtil;
@@ -49,10 +48,11 @@ public class JewelStationMenu extends BaseMenu {
     public void initSlots() {
         slots.clear();
 
-        addPlayerInventory();
-        addPlayerHotbar();
         addChestInventory();
         addCalculatorInventory();
+
+        addPlayerInventory();
+        addPlayerHotbar();
     }
 
     protected void addChestInventory() {
@@ -71,11 +71,14 @@ public class JewelStationMenu extends BaseMenu {
             for (var col = 0; col < visibleColumns; col++) {
                 var slot = new JewelSlot(jewelStation.chestHandler,
                         (actualRow * visibleColumns) + col,
-                        8 + col * 18, 18 + row * 18);
+                        8 + col * 18, 18 + row * 18) {
+                    @Override
+                    public void setChanged() {
+                        super.setChanged();
+                        initSlots();
+                    }
+                };
                 addSlot(slot);
-                SomeVHAddons.LOGGER.info("slot [{}] : {}",
-                        (actualRow * visibleColumns) + col,
-                        jewelStation.chestHandler.getStackInSlot((actualRow * visibleColumns) + col));
             }
         }
     }

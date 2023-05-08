@@ -1,23 +1,29 @@
 package network.something.somevhaddons.block.jewel_station.gui.slot;
 
-import iskallia.vault.init.ModItems;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 import network.something.somevhaddons.block.jewel_station.util.JewelStackHandler;
 
 public class JewelSlot extends SlotItemHandler {
 
-    public JewelSlot(JewelStackHandler itemHandler, int pSlot, int pX, int pY) {
-        super(itemHandler, pSlot, pX, pY);
+    private static Container emptyInventory = new SimpleContainer(0);
+    private final JewelStackHandler itemHandler;
+
+    public JewelSlot(JewelStackHandler itemHandler, int index, int pX, int pY) {
+        super(itemHandler, index, pX, pY);
+        this.itemHandler = itemHandler;
     }
 
     @Override
-    public boolean mayPlace(ItemStack pStack) {
-        return pStack.is(ModItems.JEWEL);
+    public void set(ItemStack pStack) {
+        itemHandler.insertItem(pStack, false);
+        setChanged();
     }
 
     @Override
-    public int getMaxStackSize() {
-        return 1;
+    public int getMaxStackSize(ItemStack pStack) {
+        return getMaxStackSize();
     }
 }

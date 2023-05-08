@@ -75,7 +75,7 @@ public class JewelStackHandler implements IItemHandler, IItemHandlerModifiable, 
             stacks.add(stack);
             onContentsChanged();
         }
-        return stack;
+        return ItemStack.EMPTY;
     }
 
     @NotNull
