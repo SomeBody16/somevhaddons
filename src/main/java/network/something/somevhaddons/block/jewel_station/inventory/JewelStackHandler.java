@@ -1,7 +1,6 @@
 package network.something.somevhaddons.block.jewel_station.inventory;
 
 import iskallia.vault.init.ModItems;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -10,28 +9,21 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import network.something.somevhaddons.SomeVHAddons;
 import network.something.somevhaddons.api.util.the_vault.JewelAttribute;
 import network.something.somevhaddons.api.util.the_vault.JewelAttributes;
 import network.something.somevhaddons.block.jewel_station.inventory.sorter.JewelAttributeSorter;
 
 import javax.annotation.Nonnull;
-import java.util.List;
+import java.util.ArrayList;
 
 public class JewelStackHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<CompoundTag> {
 
-    protected List<ItemStack> stacks;
+    protected ArrayList<ItemStack> stacks;
     protected JewelAttributeSorter sorter = new JewelAttributeSorter(JewelAttributes.SIZE);
 
     public JewelStackHandler() {
-        stacks = NonNullList.create();
-    }
-
-    protected void incrementSizeWith(int newSize) {
-        var newStacks = NonNullList.withSize(newSize, ItemStack.EMPTY);
-        for (var i = 0; i < stacks.size(); i++) {
-            newStacks.set(i, stacks.get(i));
-        }
-        stacks = newStacks;
+        stacks = new ArrayList<>();
     }
 
     @Override
@@ -51,6 +43,11 @@ public class JewelStackHandler implements IItemHandler, IItemHandlerModifiable, 
     public ItemStack getStackInSlot(int slot) {
         validateSlotIndex(slot);
         return this.stacks.get(slot);
+    }
+
+    public void addItem(@Nonnull ItemStack stack) {
+        stacks.add(stack);
+        onContentsChanged();
     }
 
     @Override
@@ -131,7 +128,7 @@ public class JewelStackHandler implements IItemHandler, IItemHandlerModifiable, 
     }
 
     protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
-        return Math.min(getSlotLimit(slot), stack.getMaxStackSize());
+        return 1;
     }
 
     @Override
@@ -142,43 +139,45 @@ public class JewelStackHandler implements IItemHandler, IItemHandlerModifiable, 
     @Override
     public CompoundTag serializeNBT() {
         ListTag nbtTagList = new ListTag();
-        for (int i = 0; i < stacks.size(); i++) {
-            if (!stacks.get(i).isEmpty()) {
+        for (ItemStack stack : stacks) {
+            if (!stack.isEmpty()) {
                 CompoundTag itemTag = new CompoundTag();
-                itemTag.putInt("Slot", i);
-                stacks.get(i).save(itemTag);
+                stack.save(itemTag);
                 nbtTagList.add(itemTag);
             }
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put("Items", nbtTagList);
+
+        SomeVHAddons.LOGGER.info("serializeNBT 1 : {}", stacks.size());
+        SomeVHAddons.LOGGER.info("serializeNBT 2 : {}", nbtTagList.size());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
-        stacks = NonNullList.withSize(tagList.size(), ItemStack.EMPTY);
+        stacks = new ArrayList<>();
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag itemTags = tagList.getCompound(i);
-            int slot = itemTags.getInt("Slot");
-
-            if (slot >= 0 && slot < stacks.size()) {
-                stacks.set(slot, ItemStack.of(itemTags));
-            }
+            stacks.add(ItemStack.of(itemTags));
         }
+        SomeVHAddons.LOGGER.info("deserializeNBT 1 : {}", stacks.size());
+        SomeVHAddons.LOGGER.info("deserializeNBT 2 : {}", tagList.size());
         onLoad();
     }
 
     public int getRows(int columns) {
+        SomeVHAddons.LOGGER.info(
+                "getRows : [stackSize : {}]",
+                stacks.size()
+        );
         return (int) Math.ceil(stacks.size() / (double) columns);
     }
 
     protected void validateSlotIndex(int slot) {
-        if (slot < 0 || slot >= stacks.size()) {
-            if (slot >= stacks.size()) {
-                incrementSizeWith(slot + 1);
-            }
+        while (stacks.size() < slot + 1) {
+            stacks.add(ItemStack.EMPTY);
         }
     }
 
@@ -195,9 +194,8 @@ public class JewelStackHandler implements IItemHandler, IItemHandlerModifiable, 
     }
 
     public void sort() {
-        stacks = stacks.stream()
-                .filter(stack -> !stack.isEmpty())
-                .sorted(sorter)
-                .toList();
+        stacks.removeIf(ItemStack::isEmpty);
+        stacks.sort(sorter);
+        SomeVHAddons.LOGGER.info("Sorted: {}", stacks.size());
     }
 }

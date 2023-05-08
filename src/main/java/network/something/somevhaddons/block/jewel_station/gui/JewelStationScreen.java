@@ -1,6 +1,7 @@
 package network.something.somevhaddons.block.jewel_station.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import iskallia.vault.init.ModItems;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,6 +12,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import network.something.somevhaddons.SomeVHAddons;
 import network.something.somevhaddons.api.screen.BaseScreen;
 import network.something.somevhaddons.api.screen.widget.ScrollbarWidget;
+import network.something.somevhaddons.api.util.RenderUtils;
+import network.something.somevhaddons.block.jewel_station.packet.PacketInsertCarriedItem;
+import network.something.somevhaddons.init.ModPackets;
 
 @Mod.EventBusSubscriber(modid = SomeVHAddons.ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class JewelStationScreen extends BaseScreen<JewelStationMenu> {
@@ -40,6 +44,34 @@ public class JewelStationScreen extends BaseScreen<JewelStationMenu> {
     protected void renderBackground(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
         bindTexture(SomeVHAddons.ID, "textures/gui/jewel_station_gui.png");
         blit(pPoseStack, leftPos, topPos, 0, 0, imageWidth, imageHeight);
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (isOverChestArea(pMouseX, pMouseY) || isOverCalculatorArea(pMouseX, pMouseY)) {
+            var carried = menu.getCarried();
+            if (!carried.isEmpty()
+                    && carried.is(ModItems.JEWEL)
+                    && pButton == 0
+            ) {
+                var packet = new PacketInsertCarriedItem(isOverCalculatorArea(pMouseX, pMouseY));
+                ModPackets.sendToServer(packet);
+                return true;
+            }
+        }
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    public boolean isOverChestArea(double mouseX, double mouseY) {
+        mouseX -= getGuiLeft();
+        mouseY -= getGuiTop();
+        return RenderUtils.inBounds(7, 17, 72, 108, mouseX, mouseY);
+    }
+
+    public boolean isOverCalculatorArea(double mouseX, double mouseY) {
+        mouseX -= getGuiLeft();
+        mouseY -= getGuiTop();
+        return RenderUtils.inBounds(121, 17, 54, 108, mouseX, mouseY);
     }
 
 }

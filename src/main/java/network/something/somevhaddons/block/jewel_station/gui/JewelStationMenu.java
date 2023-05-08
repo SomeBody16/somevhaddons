@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.RegistryObject;
+import network.something.somevhaddons.SomeVHAddons;
 import network.something.somevhaddons.api.screen.BaseMenu;
 import network.something.somevhaddons.api.screen.widget.ScrollbarWidget;
 import network.something.somevhaddons.api.util.MenuUtil;
@@ -24,7 +25,7 @@ public class JewelStationMenu extends BaseMenu {
     public static final String ID = "jewel_station";
     public static RegistryObject<MenuType<JewelStationMenu>> TYPE;
 
-    protected final JewelStationBlockEntity jewelStation;
+    public final JewelStationBlockEntity jewelStation;
     protected final Level level;
     protected final Inventory playerInventory;
 
@@ -61,6 +62,8 @@ public class JewelStationMenu extends BaseMenu {
         var storedRows = jewelStation.chestHandler.getRows(visibleColumns);
         var scrollProgress = chestScrollbar == null ? 0 : chestScrollbar.getProgress();
 
+        SomeVHAddons.LOGGER.info("addChestInventory : [storedRows : {}] [progress : {}]", storedRows, scrollProgress);
+
         var maxOffsetRows = Math.max(0, storedRows - visibleRows);
         var offsetRows = (int) (maxOffsetRows * scrollProgress);
         offsetRows = Math.min(maxOffsetRows, offsetRows);
@@ -71,7 +74,8 @@ public class JewelStationMenu extends BaseMenu {
             for (var col = 0; col < visibleColumns; col++) {
                 var slot = new JewelSlot(jewelStation.chestHandler,
                         col + (actualRow * visibleColumns),
-                        8 + col * 18, 18 + row * 18);
+                        8 + col * 18, 18 + row * 18) {
+                };
                 addSlot(slot);
             }
         }

@@ -19,6 +19,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.registries.RegistryObject;
+import network.something.somevhaddons.SomeVHAddons;
 import network.something.somevhaddons.block.jewel_station.gui.JewelStationMenu;
 import network.something.somevhaddons.block.jewel_station.inventory.JewelStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +48,7 @@ public class JewelStationBlockEntity extends BlockEntity implements IAnimatable,
         protected void onContentsChanged() {
             super.onContentsChanged();
             setChanged();
+            SomeVHAddons.LOGGER.info("isClientSide: {}", level.isClientSide);
         }
     };
 

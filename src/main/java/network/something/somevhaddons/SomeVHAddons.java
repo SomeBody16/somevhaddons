@@ -3,10 +3,7 @@ package network.something.somevhaddons;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import network.something.somevhaddons.init.ModBlockEntities;
-import network.something.somevhaddons.init.ModBlocks;
-import network.something.somevhaddons.init.ModItems;
-import network.something.somevhaddons.init.ModMenuTypes;
+import network.something.somevhaddons.init.*;
 import org.slf4j.Logger;
 
 @Mod(SomeVHAddons.ID)
@@ -22,5 +19,6 @@ public class SomeVHAddons {
         ModBlockEntities.busRegister(eventBus);
         ModItems.busRegister(eventBus);
         ModMenuTypes.busRegister(eventBus);
+        ModPackets.register();
     }
 }
