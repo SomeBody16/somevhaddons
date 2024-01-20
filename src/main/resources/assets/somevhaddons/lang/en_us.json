@@ -1,4 +1,6 @@
 {
     "item.somevhaddons.jewel_station": "Jewel Station",
-    "block.somevhaddons.jewel_station": "Jewel Station"
+  "block.somevhaddons.jewel_station": "Jewel Station",
+  "block.somevhaddons.shard_pouch_block": "Shard Pouch",
+  "curios.identifier.junk_identifier": "Junk Identifier"
 }

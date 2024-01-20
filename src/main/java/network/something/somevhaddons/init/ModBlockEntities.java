@@ -5,8 +5,8 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import network.something.somevhaddons.SomeVHAddons;
-import network.something.somevhaddons.block.jewel_station.JewelStationBlock;
-import network.something.somevhaddons.block.jewel_station.JewelStationBlockEntity;
+import network.something.somevhaddons.addon.shard_pouch.ShardPouchBlock;
+import network.something.somevhaddons.addon.shard_pouch.ShardPouchBlockEntity;
 
 public class ModBlockEntities {
 
@@ -14,10 +14,10 @@ public class ModBlockEntities {
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, SomeVHAddons.ID);
 
     static {
-        // Jewel Station
-        JewelStationBlockEntity.TYPE = BLOCK_ENTITIES.register(JewelStationBlockEntity.ID,
-                () -> BlockEntityType.Builder.of(JewelStationBlockEntity::new,
-                                JewelStationBlock.TYPE.get())
+        // Shard Pouch
+        ShardPouchBlockEntity.TYPE = BLOCK_ENTITIES.register(ShardPouchBlockEntity.ID,
+                () -> BlockEntityType.Builder.of(ShardPouchBlockEntity::new,
+                                ShardPouchBlock.TYPE.get())
                         .build(null));
     }
 

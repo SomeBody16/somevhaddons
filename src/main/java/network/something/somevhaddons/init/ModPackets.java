@@ -7,7 +7,9 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 import network.something.somevhaddons.SomeVHAddons;
-import network.something.somevhaddons.block.jewel_station.packet.PacketInsertCarriedItem;
+import network.something.somevhaddons.addon.shard_pouch.packet.PacketRequestShardCount;
+import network.something.somevhaddons.addon.shard_pouch.packet.PacketShardClear;
+import network.something.somevhaddons.addon.shard_pouch.packet.PacketShardCount;
 
 public class ModPackets {
 
@@ -27,10 +29,22 @@ public class ModPackets {
                 .serverAcceptedVersions(s -> true)
                 .simpleChannel();
 
-        CHANNEL.messageBuilder(PacketInsertCarriedItem.class, id(), NetworkDirection.PLAY_TO_SERVER)
-                .decoder(PacketInsertCarriedItem::new)
-                .encoder(PacketInsertCarriedItem::toBytes)
-                .consumer(PacketInsertCarriedItem::handle)
+        CHANNEL.messageBuilder(PacketRequestShardCount.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(PacketRequestShardCount::new)
+                .encoder(PacketRequestShardCount::toBytes)
+                .consumer(PacketRequestShardCount::handle)
+                .add();
+
+        CHANNEL.messageBuilder(PacketShardClear.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(PacketShardClear::new)
+                .encoder(PacketShardClear::toBytes)
+                .consumer(PacketShardClear::handle)
+                .add();
+
+        CHANNEL.messageBuilder(PacketShardCount.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(PacketShardCount::new)
+                .encoder(PacketShardCount::toBytes)
+                .consumer(PacketShardCount::handle)
                 .add();
     }
 

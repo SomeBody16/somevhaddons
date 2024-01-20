@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "network.something.somevhaddons.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "somevhaddons.refmap.json",
+  "mixins": [
+    "EnchantmentEntryMixin",
+    "ItemShardPouchMixin",
+    "TransmogTableMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -9,7 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import network.something.somevhaddons.SomeVHAddons;
-import network.something.somevhaddons.block.jewel_station.JewelStationBlock;
+import network.something.somevhaddons.addon.shard_pouch.ShardPouchBlock;
 
 import java.util.function.Supplier;
 
@@ -19,8 +19,8 @@ public class ModBlocks {
             DeferredRegister.create(ForgeRegistries.BLOCKS, SomeVHAddons.ID);
 
     static {
-        // Jewel Station
-        JewelStationBlock.TYPE = registerBlock(JewelStationBlock.ID, JewelStationBlock::new);
+        // Shard Pouch
+        ShardPouchBlock.TYPE = registerBlock(ShardPouchBlock.ID, ShardPouchBlock::new);
     }
 
     public static void busRegister(IEventBus eventBus) {

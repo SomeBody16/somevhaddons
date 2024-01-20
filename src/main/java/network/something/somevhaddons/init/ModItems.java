@@ -6,7 +6,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import network.something.somevhaddons.SomeVHAddons;
-import network.something.somevhaddons.block.jewel_station.item.JewelStationItem;
 
 import java.util.function.Supplier;
 
@@ -16,8 +15,6 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, SomeVHAddons.ID);
 
     static {
-        // Jewel Station
-        JewelStationItem.TYPE = registerItem(JewelStationItem.ID, JewelStationItem::new);
     }
 
     public static void busRegister(IEventBus eventBus) {
