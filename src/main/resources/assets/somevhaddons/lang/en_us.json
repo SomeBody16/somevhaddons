@@ -1,6 +1,10 @@
 {
-    "item.somevhaddons.jewel_station": "Jewel Station",
+  "item.somevhaddons.jewel_station": "Jewel Station",
   "block.somevhaddons.jewel_station": "Jewel Station",
   "block.somevhaddons.shard_pouch_block": "Shard Pouch",
-  "curios.identifier.junk_identifier": "Junk Identifier"
+  "curios.identifier.junk_identifier": "Junk Identifier",
+  "item.somevhaddons.experience_nugget_2": "Experience Nugget II",
+  "item.somevhaddons.experience_nugget_3": "Experience Nugget III",
+  "item.somevhaddons.experience_nugget_4": "Experience Nugget IV",
+  "item.somevhaddons.experience_nugget_5": "Experience Nugget V"
 }
