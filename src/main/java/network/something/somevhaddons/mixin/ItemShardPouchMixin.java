@@ -2,11 +2,9 @@ package network.something.somevhaddons.mixin;
 
 import iskallia.vault.init.ModItems;
 import iskallia.vault.item.ItemShardPouch;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import network.something.somevhaddons.addon.shard_pouch.ShardPouches;
-import network.something.somevhaddons.addon.shard_pouch.packet.PacketShardClear;
-import network.something.somevhaddons.init.ModPackets;
+import network.something.somevhaddons.SomeVHAddons;
+import network.something.somevhaddons.addon.curios_shard_pouch.CuriosShardPouch;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,7 +23,15 @@ public class ItemShardPouchMixin {
     )
     private static void getShardCount(Inventory playerInventory, CallbackInfoReturnable<Integer> cir,
                                       int shards) {
-        shards += ShardPouches.getAmountInPosition(playerInventory.player);
+
+        var curioPouch = CuriosShardPouch.getEquipped(playerInventory.player);
+        SomeVHAddons.LOGGER.info("Curio pouch: " + curioPouch);
+        if (curioPouch.is(ModItems.SHARD_POUCH)) {
+            SomeVHAddons.LOGGER.info("Curio pouch count: " + ItemShardPouch.getContainedStack(curioPouch).getCount());
+            shards += ItemShardPouch.getContainedStack(curioPouch).getCount();
+        }
+
+        SomeVHAddons.LOGGER.info("Shards: " + shards);
         cir.setReturnValue(shards);
     }
 
@@ -36,11 +42,7 @@ public class ItemShardPouchMixin {
             remap = false
     )
     private static void reduceShardAmount(Inventory playerInventory, int count, boolean simulate, CallbackInfoReturnable<Boolean> cir) {
-        var clearPacket = new PacketShardClear();
-        ModPackets.sendToPlayer(clearPacket, (ServerPlayer) playerInventory.player);
-
         var player = playerInventory.player;
-        var level = player.level;
 
         // Inventory
         for (int slot = 0; slot < playerInventory.getContainerSize(); ++slot) {
@@ -70,14 +72,14 @@ public class ItemShardPouchMixin {
             }
         }
 
-        // Near pouch blocks
-        var shardPouches = ShardPouches.getPouches(level, player.getOnPos());
-        for (var shardPouch : shardPouches) {
-            var shardStack = ItemShardPouch.getContainedStack(shardPouch);
+        // Curios
+        var curioPouch = CuriosShardPouch.getEquipped(player);
+        if (curioPouch.is(ModItems.SHARD_POUCH)) {
+            var shardStack = ItemShardPouch.getContainedStack(curioPouch);
             var toReduce = Math.min(count, shardStack.getCount());
             if (!simulate) {
                 shardStack.setCount(shardStack.getCount() - toReduce);
-                ItemShardPouch.setContainedStack(shardPouch, shardStack);
+                ItemShardPouch.setContainedStack(curioPouch, shardStack);
             }
 
             count -= toReduce;

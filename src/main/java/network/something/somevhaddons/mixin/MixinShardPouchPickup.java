@@ -43,10 +43,10 @@ public class MixinShardPouchPickup implements InventorySnapshotData.InventoryAcc
             if (!(this.player.containerMenu instanceof ShardPouchContainer)) {
                 ItemStack pouchStack = CuriosShardPouch.getEquipped(this.player);
 
-                if (!pouchStack.isEmpty()) {
+                if (pouchStack.is(ModItems.SHARD_POUCH)) {
                     pouchStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
-                        ItemStack remainder = handler.insertItem(0, stack, false);
-                        stack.shrink(remainder.getCount());
+                        handler.insertItem(0, stack, false);
+                        stack.shrink(stack.getCount());
                         if (stack.isEmpty()) {
                             cir.setReturnValue(true);
                         }
