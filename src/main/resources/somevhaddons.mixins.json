@@ -6,7 +6,6 @@
   "refmap": "somevhaddons.refmap.json",
   "mixins": [
     "EnchantmentEntryMixin",
-    "ItemShardPouchMixin",
     "TransmogTableMixin"
   ],
   "client": [
