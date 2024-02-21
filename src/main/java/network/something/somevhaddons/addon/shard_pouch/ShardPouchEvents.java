@@ -1,5 +1,6 @@
 package network.something.somevhaddons.addon.shard_pouch;
 
+import iskallia.vault.init.ModItems;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
@@ -28,25 +29,24 @@ public class ShardPouchEvents {
 
     @SubscribeEvent
     public static void rightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
-//        if (!event.getItemStack().is(ModItems.SHARD_POUCH)
-//                || !event.getPlayer().isCrouching()
-//        ) {
-//            return;
-//        }
-//        event.setCanceled(true);
-//
-//        var shardPouch = event.getItemStack().copy();
-//        var ctx = new BlockPlaceContext(event.getPlayer(), event.getHand(),
-//                event.getItemStack(), event.getHitVec());
-//
-//        place(ctx, shardPouch);
-//        event.getPlayer().setItemInHand(event.getHand(), ItemStack.EMPTY);
+        if (!event.getItemStack().is(ModItems.SHARD_POUCH)
+                || !event.getPlayer().isCrouching()
+        ) {
+            return;
+        }
+        event.setCanceled(true);
+
+        var shardPouch = event.getItemStack().copy();
+        var ctx = new BlockPlaceContext(event.getPlayer(), event.getHand(),
+                event.getItemStack(), event.getHitVec());
+
+        if (place(ctx, shardPouch)) {
+            event.getPlayer().setItemInHand(event.getHand(), ItemStack.EMPTY);
+        }
     }
 
 
-    public static void place(BlockPlaceContext ctx, ItemStack shardPouch) {
-        if (!ctx.canPlace()) return;
-
+    public static boolean place(BlockPlaceContext ctx, ItemStack shardPouch) {
         var blockPos = ctx.getClickedPos();
         var blockState = ShardPouchBlock.TYPE.get().getStateForPlacement(ctx);
         var level = ctx.getLevel();
@@ -56,7 +56,7 @@ public class ShardPouchEvents {
                 || !canPlace(ctx, blockState)
                 || !ctx.getLevel().setBlock(blockPos, blockState, 11)
         ) {
-            return;
+            return false;
         }
 
         level.gameEvent(player, GameEvent.BLOCK_PLACE, blockPos);
@@ -66,6 +66,7 @@ public class ShardPouchEvents {
         if (level.getBlockEntity(blockPos) instanceof ShardPouchBlockEntity blockEntity) {
             blockEntity.setShardPouch(shardPouch);
         }
+        return true;
     }
 
     protected static boolean canPlace(BlockPlaceContext pContext, BlockState pState) {
