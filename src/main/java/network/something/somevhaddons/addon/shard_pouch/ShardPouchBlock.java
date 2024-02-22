@@ -3,11 +3,9 @@ package network.something.somevhaddons.addon.shard_pouch;
 import iskallia.vault.item.ItemShardPouch;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.protocol.game.ClientboundSetActionBarTextPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +23,8 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static net.minecraft.Util.NIL_UUID;
+
 public class ShardPouchBlock extends BaseEntityBlock {
     public static final String ID = "shard_pouch_block";
     public static RegistryObject<ShardPouchBlock> TYPE;
@@ -35,7 +35,7 @@ public class ShardPouchBlock extends BaseEntityBlock {
         super(
                 Properties.of(Material.WOOL)
                         .sound(SoundType.WOOL)
-                        .strength(0.8f)
+                        .instabreak()
                         .noOcclusion()
         );
     }
@@ -94,28 +94,35 @@ public class ShardPouchBlock extends BaseEntityBlock {
     @NotNull
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pPlayer.isCrouching()) {
-            var anyHandEmpty = pPlayer.getItemInHand(InteractionHand.MAIN_HAND).isEmpty()
-                    || pPlayer.getItemInHand(InteractionHand.OFF_HAND).isEmpty();
+        if (pLevel.getBlockEntity(pPos) instanceof ShardPouchBlockEntity blockEntity) {
+            if (pPlayer.isCrouching()) {
+                // Donate all your soul shards
+                var amount = ItemShardPouch.getShardCount(pPlayer);
+                blockEntity.insert(amount);
+                ItemShardPouch.reduceShardAmount(pPlayer.getInventory(), amount, false);
 
-            if (!pLevel.isClientSide && anyHandEmpty) {
-                pLevel.setBlock(pPos, Blocks.AIR.defaultBlockState(), 11);
+                if (pPlayer instanceof ServerPlayer serverPlayer) {
+                    var newAmount = blockEntity.getAmount();
+                    var txt = "%d soul shards donated (%d total)".formatted(amount, newAmount);
+                    var message = new TextComponent(txt).withStyle(ChatFormatting.LIGHT_PURPLE);
+                    serverPlayer.sendMessage(message, ChatType.GAME_INFO, NIL_UUID);
+                }
 
-                SoundType soundtype = pState.getSoundType(pLevel, pPos, pPlayer);
-                pLevel.playSound(null, pPos, SoundEvents.WOOL_BREAK, SoundSource.BLOCKS,
-                        (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                return InteractionResult.sidedSuccess(pLevel.isClientSide);
+            } else {
+                // Take one stack of soul shards
+                var shards = blockEntity.extract(64);
+                Block.popResourceFromFace(pLevel, pPos, pHit.getDirection(), shards);
+
+                if (pPlayer instanceof ServerPlayer serverPlayer) {
+                    var newAmount = blockEntity.getAmount();
+                    var txt = "%d soul shards taken (%d left)".formatted(shards.getCount(), newAmount);
+                    var message = new TextComponent(txt).withStyle(ChatFormatting.LIGHT_PURPLE);
+                    serverPlayer.sendMessage(message, ChatType.GAME_INFO, NIL_UUID);
+                }
+
+                return InteractionResult.sidedSuccess(pLevel.isClientSide);
             }
-            return InteractionResult.sidedSuccess(pLevel.isClientSide);
-        }
-
-        if (pPlayer instanceof ServerPlayer serverPlayer
-                && pLevel.getBlockEntity(pPos) instanceof ShardPouchBlockEntity blockEntity
-        ) {
-            var amount = ItemShardPouch.getContainedStack(blockEntity.shardPouch).getCount();
-            var message = new TextComponent(Integer.toString(amount))
-                    .withStyle(ChatFormatting.LIGHT_PURPLE);
-            var packet = new ClientboundSetActionBarTextPacket(message);
-            serverPlayer.connection.send(packet);
         }
 
         return InteractionResult.PASS;

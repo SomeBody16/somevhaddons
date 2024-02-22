@@ -53,8 +53,26 @@ public class ShardPouchBlockEntity extends BlockEntity implements IAnimatable {
         }
     }
 
-    public ItemStack getShardPouch() {
-        return shardPouch;
+    public int getAmount() {
+        return ItemShardPouch.getContainedStack(shardPouch).getCount();
+    }
+
+    public void insert(int amount) {
+        var shards = new ItemStack(ModItems.SOUL_SHARD, amount);
+        insert(shards);
+    }
+
+    public void insert(ItemStack shards) {
+        shardPouch.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+            handler.insertItem(0, shards, false);
+        });
+    }
+
+    public ItemStack extract(int amount) {
+        return shardPouch.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                .resolve()
+                .map(handler -> handler.extractItem(0, amount, false))
+                .orElse(ItemStack.EMPTY);
     }
 
     @NonNull

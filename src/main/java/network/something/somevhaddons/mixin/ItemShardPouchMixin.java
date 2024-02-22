@@ -4,7 +4,7 @@ import iskallia.vault.init.ModItems;
 import iskallia.vault.item.ItemShardPouch;
 import net.minecraft.world.entity.player.Inventory;
 import network.something.somevhaddons.SomeVHAddons;
-import network.something.somevhaddons.addon.curios_shard_pouch.CuriosShardPouch;
+import network.something.somevhaddons.addon.shard_pouch.curios.CuriosShardPouch;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

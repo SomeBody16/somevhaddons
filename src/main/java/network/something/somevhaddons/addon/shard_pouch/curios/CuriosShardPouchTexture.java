@@ -1,4 +1,4 @@
-package network.something.somevhaddons.addon.curios_shard_pouch;
+package network.something.somevhaddons.addon.shard_pouch.curios;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.TextureStitchEvent;
