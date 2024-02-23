@@ -16,6 +16,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -26,9 +27,15 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.stream.Stream;
 
 import static net.minecraft.Util.NIL_UUID;
 
@@ -38,6 +45,17 @@ public class ShardPouchBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
+    private static final VoxelShape SHAPE = Stream.of(
+            Block.box(3, 0, 3, 13, 5, 13),
+            Block.box(4, 5, 4, 12, 6, 12),
+            Block.box(5, 6, 5, 11, 7, 11),
+            Block.box(6, 7, 6, 10, 8, 10),
+            Block.box(6, 8, 6, 10, 9, 7),
+            Block.box(6, 8, 9, 10, 9, 10),
+            Block.box(9, 8, 7, 10, 9, 9),
+            Block.box(6, 8, 7, 7, 9, 9)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+
     public ShardPouchBlock() {
         super(
                 Properties.of(Material.WOOL)
@@ -45,6 +63,11 @@ public class ShardPouchBlock extends BaseEntityBlock {
                         .instabreak()
                         .noOcclusion()
         );
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return SHAPE;
     }
 
     @Nullable

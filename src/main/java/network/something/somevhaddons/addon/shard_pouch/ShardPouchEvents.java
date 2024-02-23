@@ -19,12 +19,8 @@ import network.something.somevhaddons.SomeVHAddons;
 public class ShardPouchEvents {
 
     @SubscribeEvent
-    public static void rightClickItem(final PlayerInteractEvent.RightClickItem event) {
-//        if (event.getItemStack().is(ModItems.SHARD_POUCH)
-//                && event.getPlayer().isCrouching()
-//        ) {
-//            event.setCanceled(true);
-//        }
+    public static void rightClickItem(final PlayerInteractEvent.RightClickBlock event) {
+
     }
 
     @SubscribeEvent
