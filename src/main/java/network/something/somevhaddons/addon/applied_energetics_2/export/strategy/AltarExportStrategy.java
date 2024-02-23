@@ -7,7 +7,6 @@ import appeng.api.stacks.AEItemKey;
 import appeng.api.stacks.AEKey;
 import appeng.api.storage.StorageHelper;
 import com.google.common.primitives.Ints;
-import com.mojang.logging.LogUtils;
 import iskallia.vault.block.entity.VaultAltarTileEntity;
 import iskallia.vault.init.ModBlocks;
 import iskallia.vault.init.ModItems;
@@ -16,26 +15,23 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.state.BlockState;
 import network.something.somevhaddons.SomeVHAddons;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 public class AltarExportStrategy implements StackExportStrategy {
 
-    public static boolean isCompatible(ServerLevel level, BlockPos pos, Direction fromSide) {
-        return level.getBlockState(pos).is(ModBlocks.VAULT_ALTAR);
+    public static boolean isCompatible(ServerLevel level, BlockPos pos, Direction fromSide, BlockState blockState) {
+        return blockState.is(ModBlocks.VAULT_ALTAR);
     }
-
-    public static final Logger LOGGER = LogUtils.getLogger();
 
     protected ServerLevel level;
     protected BlockPos fromPos;
     protected Direction fromSide;
 
     public AltarExportStrategy(ServerLevel level, BlockPos fromPos, Direction fromSide) {
-        LOGGER.info("Created altar export strategy for {}:{}", fromPos, fromSide);
         this.level = level;
         this.fromPos = fromPos;
         this.fromSide = fromSide;
@@ -53,7 +49,6 @@ public class AltarExportStrategy implements StackExportStrategy {
                 Actionable.SIMULATE
         );
 
-        LOGGER.info("IDLE: extracted {} of {} ({})", extracted, what, mode);
         if (extracted > 0) {
             if (mode == Actionable.MODULATE) {
                 extracted = StorageHelper.poweredExtraction(
@@ -65,7 +60,6 @@ public class AltarExportStrategy implements StackExportStrategy {
                         Actionable.MODULATE
                 );
 
-                LOGGER.info("IDLE: extracted {} of {} (MODULATE ACTION)", extracted, what);
                 var vaultRock = what.toStack(1);
                 var player = (ServerPlayer) level.getPlayerByUUID(altar.getOwner());
                 altar.onAddVaultRock(player, vaultRock);

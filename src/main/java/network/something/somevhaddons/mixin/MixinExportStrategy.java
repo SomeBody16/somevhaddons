@@ -17,9 +17,7 @@ import appeng.core.settings.TickRates;
 import appeng.parts.automation.ExportBusPart;
 import appeng.parts.automation.IOBusPart;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.server.level.ServerLevel;
 import network.something.somevhaddons.SomeVHAddons;
-import network.something.somevhaddons.addon.applied_energetics_2.export.ExportStrategyProvider;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -65,7 +63,7 @@ public abstract class MixinExportStrategy extends IOBusPart implements ICrafting
             var fromPos = self.getBlockPos().relative(this.getSide());
             var fromSide = getSide().getOpposite();
             SomeVHAddons.LOGGER.info("Trying to get factory for {}:{}", fromPos, fromSide);
-            exportStrategy = ExportStrategyProvider.get((ServerLevel) getLevel(), fromPos, fromSide);
+//            exportStrategy = ExportStrategyProvider.get((ServerLevel) getLevel(), fromPos, fromSide);
         }
     }
 
