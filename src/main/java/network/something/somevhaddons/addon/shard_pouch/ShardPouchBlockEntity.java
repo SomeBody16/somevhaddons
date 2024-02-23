@@ -5,8 +5,6 @@ import iskallia.vault.item.ItemShardPouch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.Containers;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -30,7 +28,7 @@ public class ShardPouchBlockEntity extends BlockEntity implements IAnimatable {
     public static RegistryObject<BlockEntityType<ShardPouchBlockEntity>> TYPE;
 
     protected AnimationFactory factory = GeckoLibUtil.createFactory(this);
-    protected ItemStack shardPouch;
+    protected ItemStack shardPouch = ItemStack.EMPTY;
     protected LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     public ShardPouchBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -118,11 +116,5 @@ public class ShardPouchBlockEntity extends BlockEntity implements IAnimatable {
         shardPouch = ItemStack.of(shardPouchTag);
 
         super.load(nbt);
-    }
-
-    public void drops() {
-        SimpleContainer inventory = new SimpleContainer(1);
-        inventory.setItem(0, shardPouch);
-        Containers.dropContents(level, worldPosition, inventory);
     }
 }

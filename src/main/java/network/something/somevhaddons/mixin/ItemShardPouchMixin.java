@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ItemShardPouch.class)
-public class ItemShardPouchMixin {
+public abstract class ItemShardPouchMixin {
 
     @Inject(
             method = "getShardCount(Lnet/minecraft/world/entity/player/Inventory;)I",

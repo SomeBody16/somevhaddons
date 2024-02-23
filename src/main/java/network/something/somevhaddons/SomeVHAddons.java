@@ -3,6 +3,7 @@ package network.something.somevhaddons;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import network.something.somevhaddons.addon.applied_energetics_2.AE2Addon;
 import network.something.somevhaddons.init.ModBlockEntities;
 import network.something.somevhaddons.init.ModBlocks;
 import network.something.somevhaddons.init.ModItems;
@@ -22,5 +23,7 @@ public class SomeVHAddons {
         ModBlockEntities.busRegister(eventBus);
         ModItems.busRegister(eventBus);
         ModMenuTypes.busRegister(eventBus);
+
+        AE2Addon.init();
     }
 }

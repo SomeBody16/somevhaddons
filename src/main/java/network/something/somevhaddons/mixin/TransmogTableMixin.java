@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collection;
 
 @Mixin(TransmogTableBlock.class)
-public class TransmogTableMixin {
+public abstract class TransmogTableMixin {
 
     @Inject(
             method = "canTransmogModel",

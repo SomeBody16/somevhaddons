@@ -171,6 +171,8 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
     implementation files("libs/the_vault-1.18.2-${vh_jar_version}.jar")
+    implementation files("libs/refinedstorage-${refined_storage_jar_version}.jar")
+    implementation files("libs/appliedenergistics2-forge-${applied_energetics_2_jar_version}.jar")
 
     implementation fg.deobf("software.bernie.geckolib:${geckolib_version}")
 

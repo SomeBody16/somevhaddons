@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin({Inventory.class})
-public class MixinShardPouchPickup implements InventorySnapshotData.InventoryAccessor {
+public abstract class MixinShardPouchPickup implements InventorySnapshotData.InventoryAccessor {
 
     @Shadow
     @Final

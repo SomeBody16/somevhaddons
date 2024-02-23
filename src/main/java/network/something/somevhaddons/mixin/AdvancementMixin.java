@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.minecraft.Util.NIL_UUID;
 
 @Mixin(PlayerAdvancements.class)
-public class AdvancementMixin {
+public abstract class AdvancementMixin {
 
     @Shadow(remap = false)
     private ServerPlayer player;

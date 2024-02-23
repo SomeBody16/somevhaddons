@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EnchantmentEntry.class)
-public class EnchantmentEntryMixin {
+public abstract class EnchantmentEntryMixin {
 
     @Shadow(remap = false)
     private int level;
