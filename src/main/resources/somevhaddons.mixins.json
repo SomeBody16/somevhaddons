@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "somevhaddons.refmap.json",
   "mixins": [
+    "ArtisanStationMixin",
     "EnchantmentEntryMixin",
     "ItemShardPouchMixin",
     "MixinAltarAutomationRS",
