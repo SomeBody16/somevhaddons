@@ -1,7 +1,6 @@
 package network.something.somevhaddons.addon.shard_pouch;
 
 import iskallia.vault.init.ModItems;
-import iskallia.vault.item.ItemShardPouch;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -128,32 +127,18 @@ public class ShardPouchBlock extends BaseEntityBlock {
         if (pLevel.getBlockEntity(pPos) instanceof ShardPouchBlockEntity blockEntity) {
             if (pPlayer.isCrouching()) {
                 // Donate all your soul shards
-                var amount = ItemShardPouch.getShardCount(pPlayer);
-                blockEntity.insert(amount);
-                ItemShardPouch.reduceShardAmount(pPlayer.getInventory(), amount, false);
-
-                if (pPlayer instanceof ServerPlayer serverPlayer) {
-                    var newAmount = blockEntity.getAmount();
-                    var txt = "%d soul shards donated (%d total)".formatted(amount, newAmount);
-                    var message = new TextComponent(txt).withStyle(ChatFormatting.LIGHT_PURPLE);
-                    serverPlayer.sendMessage(message, ChatType.GAME_INFO, NIL_UUID);
-                }
-
-                return InteractionResult.sidedSuccess(pLevel.isClientSide);
+                blockEntity.donate(pPlayer);
             } else {
-                // Take one stack of soul shards
-                var shards = blockEntity.extract(64);
-                popResourceFromFace(pLevel, pPos, pHit.getDirection(), shards);
-
+                // Show shard count
                 if (pPlayer instanceof ServerPlayer serverPlayer) {
-                    var newAmount = blockEntity.getAmount();
-                    var txt = "%d soul shards taken (%d left)".formatted(shards.getCount(), newAmount);
+                    var amount = blockEntity.getAmount();
+                    var txt = "%d soul shards contained".formatted(amount);
                     var message = new TextComponent(txt).withStyle(ChatFormatting.LIGHT_PURPLE);
                     serverPlayer.sendMessage(message, ChatType.GAME_INFO, NIL_UUID);
                 }
 
-                return InteractionResult.sidedSuccess(pLevel.isClientSide);
             }
+            return InteractionResult.sidedSuccess(pLevel.isClientSide);
         }
 
         return InteractionResult.PASS;

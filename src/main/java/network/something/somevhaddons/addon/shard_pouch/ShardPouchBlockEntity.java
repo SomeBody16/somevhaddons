@@ -2,9 +2,14 @@ package network.something.somevhaddons.addon.shard_pouch;
 
 import iskallia.vault.init.ModItems;
 import iskallia.vault.item.ItemShardPouch;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,6 +27,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
+
+import static net.minecraft.Util.NIL_UUID;
 
 public class ShardPouchBlockEntity extends BlockEntity implements IAnimatable {
     public static final String ID = "shard_pouch_block";
@@ -71,6 +78,19 @@ public class ShardPouchBlockEntity extends BlockEntity implements IAnimatable {
                 .resolve()
                 .map(handler -> handler.extractItem(0, amount, false))
                 .orElse(ItemStack.EMPTY);
+    }
+
+    public void donate(Player player) {
+        var amount = ItemShardPouch.getShardCount(player);
+        insert(amount);
+        ItemShardPouch.reduceShardAmount(player.getInventory(), amount, false);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            var newAmount = getAmount();
+            var txt = "%d soul shards donated (%d total)".formatted(amount, newAmount);
+            var message = new TextComponent(txt).withStyle(ChatFormatting.LIGHT_PURPLE);
+            serverPlayer.sendMessage(message, ChatType.GAME_INFO, NIL_UUID);
+        }
     }
 
     @NonNull

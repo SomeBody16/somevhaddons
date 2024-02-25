@@ -19,12 +19,15 @@ import network.something.somevhaddons.SomeVHAddons;
 public class ShardPouchEvents {
 
     @SubscribeEvent
-    public static void rightClickItem(final PlayerInteractEvent.RightClickBlock event) {
-
+    public static void donateShards(final PlayerInteractEvent.RightClickBlock event) {
+        if (event.getWorld().getBlockEntity(event.getPos()) instanceof ShardPouchBlockEntity blockEntity) {
+            blockEntity.donate(event.getPlayer());
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
-    public static void rightClickBlock(final PlayerInteractEvent.RightClickBlock event) {
+    public static void placeShardPouch(final PlayerInteractEvent.RightClickBlock event) {
         if (!event.getItemStack().is(ModItems.SHARD_POUCH)
                 || !event.getPlayer().isCrouching()
         ) {
